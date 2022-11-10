@@ -94,9 +94,51 @@ jobs:
         name: MacOS
         path: ./SysDC-x86_64-macos.zip
 
+  build-on-linux:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Setup repository
+      uses: actions/checkout@v3
+
+    # Setup (Rust)
+    - name: Setup rust toolschain
+      run: rustup target add x86_64-unknown-linux-musl
+    
+    # Setup (Node.js)
+    - name: Setup node
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18
+
+    - name: Setup npm modules
+      run: npm install
+      working-directory: ./tools/view
+
+    # Build
+    - name: Make dist dir
+      run: mkdir -p tools/view/dist
+
+    - name: Build
+      run: cargo build --release --target=x86_64-unknown-linux-musl
+      env:
+        RUSTFLAGS: -C target-feature=+crt-static
+
+    # Upload artifact
+    - name: Make package
+      run: |
+        cp target/x86_64-unknown-linux-musl/release/sysdc .
+        zip -r SysDC-x86_64-Linux sysdc LICENSE example/
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: Linux
+        path: ./SysDC-x86_64-linux.zip
+
   create-release:
     runs-on: ubuntu-latest
-    needs: [build-on-windows, build-on-macos]
+    needs: [build-on-windows, build-on-macos, build-on-linux]
 
     # Create empty release
     steps:
@@ -130,4 +172,12 @@ jobs:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: ./MacOS/SysDC-x86_64-macos.zip
         asset_name: SysDC-x86_64-macos.zip
+        asset_content_type: application/zip
+
+    - name: Upload (Linux)
+      uses: actions/upload-release-asset@v1
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./Linux/SysDC-x86_64-linux.zip
+        asset_name: SysDC-x86_64-linux.zip
         asset_content_type: application/zip
