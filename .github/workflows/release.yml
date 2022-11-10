@@ -101,7 +101,11 @@ jobs:
     - name: Setup repository
       uses: actions/checkout@v3
 
-    # Setup (libraries)
+    # Setup (apt)
+    - name: Setup apt
+      run: sudo apt update -y
+
+    # Setup (Libraries)
     - name: Setup libraries
       run: sudo apt install libdbus-1-dev pkg-config -y
 
