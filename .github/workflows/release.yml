@@ -101,6 +101,10 @@ jobs:
     - name: Setup repository
       uses: actions/checkout@v3
 
+    # Setup (libraries)
+    - name: Setup libraries
+      run: sudo apt install libdbus-1-dev pkg-config -y
+
     # Setup (Rust)
     - name: Setup rust toolschain
       run: rustup target add x86_64-unknown-linux-musl
