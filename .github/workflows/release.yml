@@ -101,17 +101,14 @@ jobs:
     - name: Setup repository
       uses: actions/checkout@v3
 
-    # Setup (env)
-    - name: Setup env
-      run: PKG_CONFIG_SYSROOT_DIR=/
-
     # Setup (apt)
     - name: Setup apt
       run: sudo apt update -y
 
     # Setup (Libraries)
     - name: Setup libraries
-      run: sudo apt install dbus-devel libdbus-1-dev pkg-config -y
+      run: sudo apt install libdbus-1-dev pkg-config libdbus-c++-dev -y
+      run: 
 
     # Setup (Rust)
     - name: Setup rust toolschain
