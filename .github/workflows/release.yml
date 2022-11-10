@@ -108,7 +108,6 @@ jobs:
     # Setup (Libraries)
     - name: Setup libraries
       run: sudo apt install libdbus-1-dev pkg-config libdbus-c++-dev -y
-      run: 
 
     # Setup (Rust)
     - name: Setup rust toolschain
