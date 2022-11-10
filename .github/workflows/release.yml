@@ -101,6 +101,10 @@ jobs:
     - name: Setup repository
       uses: actions/checkout@v3
 
+    # Setup (env)
+    - name: Setup env
+      run: PKG_CONFIG_SYSROOT_DIR=/
+
     # Setup (apt)
     - name: Setup apt
       run: sudo apt update -y
